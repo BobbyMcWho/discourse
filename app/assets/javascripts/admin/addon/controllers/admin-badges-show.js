@@ -1,19 +1,17 @@
-import I18n from "I18n";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { reads } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { run } from "@ember/runloop";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { reads } from "@ember/object/computed";
+import { run } from "@ember/runloop";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: controller(),
   saving: false,
   savingStatus: "",
-  text_customization_prefix: "",
   badgeTypes: reads("adminBadges.badgeTypes"),
   badgeGroupings: reads("adminBadges.badgeGroupings"),
   badgeTriggers: reads("adminBadges.badgeTriggers"),
@@ -58,15 +56,9 @@ export default Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
-  @observes("model.name")
-  _setTextCustomizationPrefix() {
-    const encodedName = encodeURI(this.model.name);
-    ajax(`/admin/customize/site_texts.json?q=${encodedName}`).then((result) => {
-      const key = result.site_texts.find(
-        (text) => text.id.indexOf("badges.") >= 0
-      );
-      this.set("text_customization_prefix", key.id.replace("name", ""));
-    });
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
   },
 
   @observes("model.id")
