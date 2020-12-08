@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/bobbymcwho/omniauth.git
-  revision: 389f089d9148e25e885f0a0dd514b375c910ad07
+  revision: 867ef307c07a3dbe0764bec5b8c32c2ba7b1e6ed
   branch: only-use-middleware-on-auth-routes
   specs:
     omniauth (1.9.1)
