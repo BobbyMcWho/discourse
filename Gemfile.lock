@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/bobbymcwho/omniauth.git
+  revision: 389f089d9148e25e885f0a0dd514b375c910ad07
+  branch: only-use-middleware-on-auth-routes
+  specs:
+    omniauth (1.9.1)
+      hashie (>= 3.4.6)
+      rack (>= 1.6.2, < 3)
+      rack-protection
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -214,9 +224,6 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     oj (3.10.16)
-    omniauth (1.9.1)
-      hashie (>= 3.4.6)
-      rack (>= 1.6.2, < 3)
     omniauth-facebook (8.0.0)
       omniauth-oauth2 (~> 1.2)
     omniauth-github (1.4.0)
@@ -500,7 +507,7 @@ DEPENDENCIES
   mustache
   nokogiri
   oj
-  omniauth
+  omniauth!
   omniauth-facebook
   omniauth-github
   omniauth-google-oauth2

@@ -98,7 +98,7 @@ gem 'mustache'
 gem 'nokogiri'
 gem 'css_parser', require: false
 
-gem 'omniauth'
+gem 'omniauth', git: 'https://github.com/bobbymcwho/omniauth.git', branch: 'only-use-middleware-on-auth-routes'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
