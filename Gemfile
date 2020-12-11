@@ -98,12 +98,12 @@ gem 'mustache'
 gem 'nokogiri'
 gem 'css_parser', require: false
 
-gem 'omniauth', github: 'omniauth/omniauth', branch: '2_0-indev'
+gem 'omniauth', '2.0.0-rc1'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-github'
-
-gem 'omniauth-oauth2', require: false
+gem 'omniauth-github', github: 'bobbymcwho/omniauth-github', branch: 'bump-omniauth-to-prerelease'
+gem 'omniauth-oauth', github: 'bobbymcwho/omniauth-oauth', branch: 'bump-omniauth-to-prerelease', require: false
+gem 'omniauth-oauth2', github: 'bobbymcwho/omniauth-oauth2', branch: 'bump-omniauth-to-prerelease', require: false
 
 gem 'omniauth-google-oauth2'
 
