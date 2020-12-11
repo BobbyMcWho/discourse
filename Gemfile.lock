@@ -1,3 +1,30 @@
+GIT
+  remote: https://github.com/bobbymcwho/omniauth-github.git
+  revision: 01a3d4bee3e5d02d5eb1df7a0c43f5f7c9fd5c21
+  branch: bump-omniauth-to-prerelease
+  specs:
+    omniauth-github (1.4.0)
+      omniauth (= 2.0.0.pre.rc1)
+      omniauth-oauth2
+
+GIT
+  remote: https://github.com/bobbymcwho/omniauth-oauth.git
+  revision: 7313645c9813b45d627986c2202bb724e3700ffc
+  branch: bump-omniauth-to-prerelease
+  specs:
+    omniauth-oauth (1.1.0)
+      oauth
+      omniauth (= 2.0.0.pre.rc1)
+
+GIT
+  remote: https://github.com/bobbymcwho/omniauth-oauth2.git
+  revision: da49e4c76ee08689a87c49f8bf1db37ba1d1d920
+  branch: bump-omniauth-to-prerelease
+  specs:
+    omniauth-oauth2 (1.7.0)
+      oauth2 (~> 1.4)
+      omniauth (= 2.0.0.pre.rc1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -214,24 +241,16 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     oj (3.10.16)
-    omniauth (1.9.1)
+    omniauth (2.0.0.pre.rc1)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
+      rack-protection
     omniauth-facebook (8.0.0)
       omniauth-oauth2 (~> 1.2)
-    omniauth-github (1.4.0)
-      omniauth (~> 1.5)
-      omniauth-oauth2 (>= 1.4.0, < 2.0)
     omniauth-google-oauth2 (0.8.0)
       jwt (>= 2.0)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.6)
-    omniauth-oauth (1.1.0)
-      oauth
-      omniauth (~> 1.0)
-    omniauth-oauth2 (1.7.0)
-      oauth2 (~> 1.4)
-      omniauth (~> 1.9)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
@@ -500,11 +519,12 @@ DEPENDENCIES
   mustache
   nokogiri
   oj
-  omniauth
+  omniauth (= 2.0.0.pre.rc1)
   omniauth-facebook
-  omniauth-github
+  omniauth-github!
   omniauth-google-oauth2
-  omniauth-oauth2
+  omniauth-oauth!
+  omniauth-oauth2!
   omniauth-twitter
   onebox
   parallel_tests
