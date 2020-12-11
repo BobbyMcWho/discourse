@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/omniauth/omniauth.git
-  revision: 49ca57789a26eae3fc516615a32f16e46e9e786f
+  revision: 1956a95e6466f0bcefbe2cd4e444a14dad60a7b4
   branch: 2_0-indev
   specs:
     omniauth (1.9.1)

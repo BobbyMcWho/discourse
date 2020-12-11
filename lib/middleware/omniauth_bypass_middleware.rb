@@ -24,9 +24,6 @@ class Middleware::OmniauthBypassMiddleware
     @omniauth.before_request_phase do |env|
       request = ActionDispatch::Request.new(env)
 
-      # Check for CSRF token in POST requests
-      CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
-
       # Check whether the authenticator is enabled
       if !Discourse.enabled_authenticators.any? { |a| a.name.to_sym == env['omniauth.strategy'].name.to_sym }
         raise AuthenticatorDisabled
@@ -34,6 +31,34 @@ class Middleware::OmniauthBypassMiddleware
 
       # If the user is trying to reconnect to an existing account, store in session
       request.session[:auth_reconnect] = !!request.params["reconnect"]
+    end
+
+    OmniAuth.config.request_validation_phase = CSRFTokenVerifier.new
+
+    OmniAuth.config.on_failure do |env|
+      begin
+        raise env['omniauth.error']
+      rescue AuthenticatorDisabled => e
+        #  Authenticator is disabled, pretend it doesn't exist and pass request to app
+        @app.call(env)
+      rescue OAuth::Unauthorized => e
+        # OAuth1 (i.e. Twitter) makes a web request during the setup phase
+        # If it fails, Omniauth does not handle the error. Handle it here
+        env["omniauth.error.type"] = "request_error"
+        Rails.logger.error "Authentication failure! request_error: #{e.class}, #{e.message}"
+        OmniAuth::FailureEndpoint.call(env)
+      rescue JWT::InvalidIatError => e
+        # Happens for openid-connect (including google) providers, when the server clock is wrong
+        env["omniauth.error.type"] = "invalid_iat"
+        Rails.logger.error "Authentication failure! invalid_iat: #{e.class}, #{e.message}"
+        OmniAuth::FailureEndpoint.call(env)
+      rescue CSRFTokenVerifier::InvalidCSRFToken => e
+        # Happens when CSRF token is missing from request
+        env["omniauth.error.type"] = "csrf_detected"
+        OmniAuth::FailureEndpoint.call(env)
+      rescue StandardError => e
+        OmniAuth::FailureEndpoint.call(env)
+      end
     end
   end
 
@@ -45,24 +70,6 @@ class Middleware::OmniauthBypassMiddleware
         OmniAuth.config.allowed_request_methods = only_one_provider ? [:get, :post] : [:post]
 
         @omniauth.call(env)
-      rescue AuthenticatorDisabled => e
-        #  Authenticator is disabled, pretend it doesn't exist and pass request to app
-        @app.call(env)
-      rescue OAuth::Unauthorized => e
-        # OAuth1 (i.e. Twitter) makes a web request during the setup phase
-        # If it fails, Omniauth does not handle the error. Handle it here
-        env["omniauth.error.type"] ||= "request_error"
-        Rails.logger.error "Authentication failure! request_error: #{e.class}, #{e.message}"
-        OmniAuth::FailureEndpoint.call(env)
-      rescue JWT::InvalidIatError => e
-        # Happens for openid-connect (including google) providers, when the server clock is wrong
-        env["omniauth.error.type"] ||= "invalid_iat"
-        Rails.logger.error "Authentication failure! invalid_iat: #{e.class}, #{e.message}"
-        OmniAuth::FailureEndpoint.call(env)
-      rescue CSRFTokenVerifier::InvalidCSRFToken => e
-        # Happens when CSRF token is missing from request
-        env["omniauth.error.type"] ||= "csrf_detected"
-        OmniAuth::FailureEndpoint.call(env)
       end
     else
       @app.call(env)
